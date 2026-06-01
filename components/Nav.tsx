@@ -26,7 +26,6 @@ export default function Nav() {
         <nav className={`nav-links${open ? " open" : ""}`} onClick={(e) => {
           if ((e.target as HTMLElement).closest("a")) setOpen(false);
         }}>
-          <a href="#how">How it works</a>
           <a href="#results">Results</a>
           <a href="#reviews">Reviews</a>
           <a href="#quote" className="nav-cta">Book now</a>

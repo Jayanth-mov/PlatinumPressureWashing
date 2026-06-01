@@ -40,7 +40,7 @@ export default function Hero() {
                 <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
-            <a href="#how" className="btn btn-ghost">See how it works</a>
+            <a href="#results" className="btn btn-ghost">See our results</a>
           </div>
           <div className="hero-trust">
             <span className="stars" aria-label="5 out of 5 stars">

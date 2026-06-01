@@ -1,6 +1,6 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import HowItWorks from "@/components/HowItWorks";
+// import HowItWorks from "@/components/HowItWorks"; // hidden for now
 import BeforeAfter from "@/components/BeforeAfter";
 import Reviews from "@/components/Reviews";
 import QuoteForm from "@/components/QuoteForm";
@@ -12,7 +12,7 @@ export default function Home() {
       <Nav />
       <a id="top" />
       <Hero />
-      <HowItWorks />
+      {/* <HowItWorks /> hidden for now — re-add to restore the "How it works" section */}
       <BeforeAfter />
       <Reviews />
       <QuoteForm />

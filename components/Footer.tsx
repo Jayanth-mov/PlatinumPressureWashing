@@ -26,14 +26,14 @@ export default function Footer() {
           <div className="footer-links">
             <div className="footer-col">
               <h4>Services</h4>
-              <a href="#how">Driveways &amp; concrete</a>
-              <a href="#how">House &amp; siding</a>
-              <a href="#how">Decks &amp; patios</a>
-              <a href="#how">Commercial</a>
+              <a href="#quote">Driveways &amp; concrete</a>
+              <a href="#quote">House &amp; siding</a>
+              <a href="#quote">Decks &amp; patios</a>
+              <a href="#quote">Commercial</a>
             </div>
             <div className="footer-col">
               <h4>Company</h4>
-              <a href="#how">How it works</a>
+              <a href="#results">Results</a>
               <a href="#reviews">Reviews</a>
               <a href="#quote">Get a quote</a>
             </div>

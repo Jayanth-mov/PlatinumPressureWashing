@@ -61,7 +61,7 @@ const steps = [
   {
     n: "2",
     title: "We arrive & wash",
-    body: "Our  crew shows up on time with pro equipment and treats every surface accordingly.",
+    body: "Our crew shows up on time with pro equipment and treats every surface accordingly.",
     badge: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
         <path d="M3 13l4-2 5 5 7-9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
