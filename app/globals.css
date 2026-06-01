@@ -47,6 +47,7 @@ img { max-width: 100%; display: block; }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 76px; }
 .brand { display: flex; align-items: center; gap: 13px; }
 .brand .mark { width: 42px; height: 42px; flex: none; object-fit: contain; }
+.nav .brand .mark { width: 56px; height: 56px; }
 .brand .name { display: flex; flex-direction: column; line-height: 1; }
 .brand .name .t1 { font-family: var(--font-display); font-weight: 700; font-size: 17px; letter-spacing: .02em; color: var(--navy-800); }
 .brand .name .t2 { font-family: var(--font-body); font-weight: 600; font-size: 9.5px; letter-spacing: .26em; text-transform: uppercase; color: var(--steel); margin-top: 3px; }

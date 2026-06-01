@@ -14,8 +14,8 @@ export default function Nav() {
             className="mark"
             src="/logo.png"
             alt="Platinum Pressure Washing logo"
-            width={42}
-            height={42}
+            width={56}
+            height={56}
             priority
           />
           <span className="name">
