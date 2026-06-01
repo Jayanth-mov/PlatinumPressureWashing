@@ -87,10 +87,14 @@ export async function POST(request: Request) {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const toEmail = process.env.QUOTE_TO_EMAIL;
+  // QUOTE_TO_EMAIL may be a single address or a comma-separated list.
+  const toEmails = (process.env.QUOTE_TO_EMAIL ?? "")
+    .split(",")
+    .map((addr) => addr.trim())
+    .filter(Boolean);
   const fromEmail = process.env.QUOTE_FROM_EMAIL || "onboarding@resend.dev";
 
-  if (!apiKey || !toEmail) {
+  if (!apiKey || toEmails.length === 0) {
     return NextResponse.json(
       {
         error:
@@ -137,7 +141,7 @@ export async function POST(request: Request) {
   try {
     const { error } = await resend.emails.send({
       from: `Platinum Pressure Washing <${fromEmail}>`,
-      to: [toEmail],
+      to: toEmails,
       replyTo: email || undefined,
       subject: `New quote request — ${name}${company ? ` (${company})` : ""}`,
       html,
