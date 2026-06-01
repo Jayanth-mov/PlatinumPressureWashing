@@ -49,9 +49,13 @@ export default function QuoteForm() {
 
   function addFiles(list: FileList | null) {
     if (!list) return;
+    // Snapshot the FileList into a real array immediately. The caller may clear
+    // the input right after, which would empty a still-referenced FileList
+    // before React's async state updater runs.
+    const incoming = Array.from(list);
     setPhotos((prev) => {
       const next = [...prev];
-      for (const f of Array.from(list)) {
+      for (const f of incoming) {
         if (f.type.startsWith("image/") && next.length < MAX_PHOTOS) {
           next.push({ file: f, url: URL.createObjectURL(f) });
         }
