@@ -6,6 +6,14 @@ import Reveal from "./Reveal";
 
 const MAX_PHOTOS = 5;
 
+const SERVICE_OPTIONS = [
+  "Driveway & concrete",
+  "House & siding wash",
+  "Deck & patio",
+  "Commercial property",
+  "Not sure / need advice",
+];
+
 interface FieldErrors {
   name?: boolean;
   phone?: boolean;
@@ -30,6 +38,7 @@ function fileToBase64(file: File): Promise<string> {
 
 export default function QuoteForm() {
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
+  const [services, setServices] = useState<string[]>([]);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [dragging, setDragging] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -59,6 +68,12 @@ export default function QuoteForm() {
     });
   }
 
+  function toggleService(option: string) {
+    setServices((prev) =>
+      prev.includes(option) ? prev.filter((s) => s !== option) : [...prev, option]
+    );
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setServerError(null);
@@ -68,7 +83,6 @@ export default function QuoteForm() {
     const name = (data.get("name") as string)?.trim() ?? "";
     const phone = (data.get("phone") as string) ?? "";
     const email = (data.get("email") as string)?.trim() ?? "";
-    const service = (data.get("service") as string) ?? "";
     const address = (data.get("address") as string)?.trim() ?? "";
     const company = (data.get("company") as string)?.trim() ?? "";
     const notes = (data.get("notes") as string)?.trim() ?? "";
@@ -77,7 +91,7 @@ export default function QuoteForm() {
       name: name.length < 2,
       phone: phone.replace(/\D/g, "").length < 10,
       email: email !== "" && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email),
-      service: !service,
+      service: services.length === 0,
       address: address.length < 5,
     };
     setErrors(nextErrors);
@@ -101,7 +115,7 @@ export default function QuoteForm() {
       const res = await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, company, phone, email, service, address, notes, photos: photoPayload }),
+        body: JSON.stringify({ name, company, phone, email, services, address, notes, photos: photoPayload }),
       });
 
       if (!res.ok) {
@@ -233,20 +247,28 @@ export default function QuoteForm() {
                     <span className="err">Please enter a valid email.</span>
                   </div>
                   <div className={`field full${errors.service ? " invalid" : ""}`}>
-                    <label htmlFor="qs">
+                    <label>
                       Service needed <span className="req">*</span>
+                      <span style={{ color: "var(--muted)", fontWeight: 600 }}>
+                        {" "}
+                        (check all that apply)
+                      </span>
                     </label>
-                    <select id="qs" name="service" defaultValue="">
-                      <option value="" disabled>
-                        Choose a service…
-                      </option>
-                      <option>Driveway &amp; concrete</option>
-                      <option>House &amp; siding wash</option>
-                      <option>Deck &amp; patio</option>
-                      <option>Commercial property</option>
-                      <option>Multiple / not sure</option>
-                    </select>
-                    <span className="err">Please choose a service.</span>
+                    <div className="checkbox-grid">
+                      {SERVICE_OPTIONS.map((option) => (
+                        <label key={option} className="checkbox-item">
+                          <input
+                            type="checkbox"
+                            name="services"
+                            value={option}
+                            checked={services.includes(option)}
+                            onChange={() => toggleService(option)}
+                          />
+                          <span>{option}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <span className="err">Please choose at least one service.</span>
                   </div>
                   <div className={`field full${errors.address ? " invalid" : ""}`}>
                     <label htmlFor="qa">

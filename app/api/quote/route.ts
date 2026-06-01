@@ -17,7 +17,7 @@ interface QuotePayload {
   company?: string;
   phone?: string;
   email?: string;
-  service?: string;
+  services?: string[];
   address?: string;
   notes?: string;
   photos?: IncomingPhoto[];
@@ -52,7 +52,11 @@ export async function POST(request: Request) {
   const company = (body.company ?? "").trim();
   const phone = (body.phone ?? "").trim();
   const email = (body.email ?? "").trim();
-  const service = (body.service ?? "").trim();
+  const services = (Array.isArray(body.services) ? body.services : [])
+    .filter((s): s is string => typeof s === "string")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 10);
   const address = (body.address ?? "").trim();
   const notes = (body.notes ?? "").trim();
 
@@ -66,12 +70,14 @@ export async function POST(request: Request) {
   if (email !== "" && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
     return NextResponse.json({ error: "Please enter a valid email." }, { status: 400 });
   }
-  if (!service) {
-    return NextResponse.json({ error: "Please choose a service." }, { status: 400 });
+  if (services.length === 0) {
+    return NextResponse.json({ error: "Please choose at least one service." }, { status: 400 });
   }
   if (address.length < 5) {
     return NextResponse.json({ error: "Please enter the service address." }, { status: 400 });
   }
+
+  const serviceText = services.join(", ");
 
   // Validate and prepare attachments.
   const incomingPhotos = Array.isArray(body.photos) ? body.photos.slice(0, MAX_PHOTOS) : [];
@@ -116,7 +122,7 @@ export async function POST(request: Request) {
         ${company ? row("Company", escapeHtml(company)) : ""}
         ${row("Phone", escapeHtml(phone))}
         ${email ? row("Email", escapeHtml(email)) : ""}
-        ${row("Service", escapeHtml(service))}
+        ${row("Service", escapeHtml(serviceText))}
         ${row("Address", escapeHtml(address))}
         ${notes ? row("Notes", escapeHtml(notes).replace(/\n/g, "<br/>")) : ""}
         ${row("Photos", attachments.length ? `${attachments.length} attached` : "None")}
@@ -132,7 +138,7 @@ export async function POST(request: Request) {
     company ? `Company: ${company}` : null,
     `Phone: ${phone}`,
     email ? `Email: ${email}` : null,
-    `Service: ${service}`,
+    `Service: ${serviceText}`,
     `Address: ${address}`,
     notes ? `Notes: ${notes}` : null,
     `Photos: ${attachments.length ? `${attachments.length} attached` : "None"}`,
