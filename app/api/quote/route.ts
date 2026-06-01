@@ -40,6 +40,43 @@ function row(label: string, value: string): string {
     </tr>`;
 }
 
+/**
+ * Send a Pushover phone notification. Best-effort: never throws, so a failure
+ * here cannot break the form submission. No-op if keys are not configured.
+ */
+async function sendPushover(opts: {
+  title: string;
+  message: string;
+  photo?: { content: Buffer; filename: string; contentType: string };
+}): Promise<void> {
+  const token = process.env.PUSHOVER_API_TOKEN;
+  const user = process.env.PUSHOVER_USER_KEY;
+  if (!token || !user) return;
+
+  try {
+    const form = new FormData();
+    form.append("token", token);
+    form.append("user", user);
+    form.append("title", opts.title);
+    form.append("message", opts.message);
+    if (opts.photo) {
+      const blob = new Blob([new Uint8Array(opts.photo.content)], {
+        type: opts.photo.contentType || "image/jpeg",
+      });
+      form.append("attachment", blob, opts.photo.filename);
+    }
+    const res = await fetch("https://api.pushover.net/1/messages.json", {
+      method: "POST",
+      body: form,
+    });
+    if (!res.ok) {
+      console.error("Pushover non-OK response:", res.status, await res.text().catch(() => ""));
+    }
+  } catch (err) {
+    console.error("Pushover send failed:", err);
+  }
+}
+
 export async function POST(request: Request) {
   let body: QuotePayload;
   try {
@@ -81,7 +118,7 @@ export async function POST(request: Request) {
 
   // Validate and prepare attachments.
   const incomingPhotos = Array.isArray(body.photos) ? body.photos.slice(0, MAX_PHOTOS) : [];
-  const attachments: { filename: string; content: Buffer }[] = [];
+  const attachments: { filename: string; content: Buffer; contentType: string }[] = [];
   for (let i = 0; i < incomingPhotos.length; i++) {
     const p = incomingPhotos[i];
     if (!p?.content || typeof p.content !== "string") continue;
@@ -89,7 +126,7 @@ export async function POST(request: Request) {
     const buf = Buffer.from(p.content, "base64");
     if (buf.length === 0 || buf.length > MAX_PHOTO_BYTES) continue;
     const safeName = (p.filename || `photo-${i + 1}.jpg`).replace(/[^a-zA-Z0-9._-]/g, "_");
-    attachments.push({ filename: safeName, content: buf });
+    attachments.push({ filename: safeName, content: buf, contentType: p.contentType || "image/jpeg" });
   }
 
   const apiKey = process.env.RESEND_API_KEY;
@@ -159,6 +196,27 @@ export async function POST(request: Request) {
       console.error("Resend error:", error);
       return NextResponse.json({ error: "Could not send your request. Please try again." }, { status: 502 });
     }
+
+    // Fire a phone notification too (best-effort; won't fail the request).
+    const pushLines = [
+      `Phone: ${phone}`,
+      email ? `Email: ${email}` : null,
+      `Service: ${serviceText}`,
+      `Address: ${address}`,
+      company ? `Company: ${company}` : null,
+      notes ? `Notes: ${notes}` : null,
+    ].filter(Boolean);
+    await sendPushover({
+      title: `New quote — ${name}`,
+      message: pushLines.join("\n"),
+      photo: attachments[0]
+        ? {
+            content: attachments[0].content,
+            filename: attachments[0].filename,
+            contentType: attachments[0].contentType,
+          }
+        : undefined,
+    });
 
     return NextResponse.json({ ok: true });
   } catch (err) {
