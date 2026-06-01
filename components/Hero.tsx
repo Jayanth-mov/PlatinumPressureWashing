@@ -30,8 +30,8 @@ export default function Hero() {
             <span className="shine">Let&apos;s fix that this week.</span>
           </h1>
           <p className="lead">
-            Professional, fully-insured pressure washing for driveways, siding, decks and commercial
-            properties. We bring back that just-built shine — guaranteed.
+            We've been providing professional pressure washing for driveways, siding, decks, and commercial
+            properties since 2023.
           </p>
           <div className="hero-actions">
             <a href="#quote" className="btn btn-primary">

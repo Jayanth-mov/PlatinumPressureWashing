@@ -51,7 +51,7 @@ const steps = [
   {
     n: "1",
     title: "Request your quote",
-    body: "Tell us your address and add a photo. We send a clear, no-obligation price — usually same day.",
+    body: "Drop your address and a photo. We'll send your price back today, usually within a few hours.",
     badge: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
         <path d="M5 8h14M5 8v11a1 1 0 001 1h12a1 1 0 001-1V8M5 8l1-4h12l1 4M9 4v4M15 4v4" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -61,7 +61,7 @@ const steps = [
   {
     n: "2",
     title: "We arrive & wash",
-    body: "Our insured crew shows up on time with pro equipment and treats every surface with the right touch.",
+    body: "Our  crew shows up on time with pro equipment and treats every surface accordingly.",
     badge: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
         <path d="M3 13l4-2 5 5 7-9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
