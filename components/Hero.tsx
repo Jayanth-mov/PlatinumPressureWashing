@@ -25,9 +25,9 @@ export default function Hero() {
         >
           <span className="eyebrow">Frisco, TX &amp; surrounding areas</span>
           <h1>
-            A spotless property,
+            Your driveway&apos;s embarrassing you.
             <br />
-            <span className="shine">pressure perfected.</span>
+            <span className="shine">Let&apos;s fix that this week.</span>
           </h1>
           <p className="lead">
             Professional, fully-insured pressure washing for driveways, siding, decks and commercial

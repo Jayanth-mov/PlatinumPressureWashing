@@ -70,8 +70,8 @@ const steps = [
   },
   {
     n: "3",
-    title: "Enjoy the shine",
-    body: "Walk out to a brighter, cleaner property. Not thrilled? We come back and re-clean for free.",
+    title: "Walk out to a clean property",
+    body: "If anything's not right, call us. We come back and fix it.",
     badge: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
         <path d="M12 3l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 10l6.9-.7z" fill="#fff" />
@@ -87,8 +87,7 @@ export default function HowItWorks() {
     <section className="section" id="how">
       <div className="container">
         <Reveal className="section-head">
-          <span className="eyebrow">How it works</span>
-          <h2>Three easy steps to a like-new property</h2>
+          <h2>Here&apos;s how it works</h2>
           <p>No deposits, no surprises. Just a clear quote and a job done right.</p>
         </Reveal>
         <div className="steps">
