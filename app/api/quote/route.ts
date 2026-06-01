@@ -50,31 +50,40 @@ async function sendPushover(opts: {
   photo?: { content: Buffer; filename: string; contentType: string };
 }): Promise<void> {
   const token = process.env.PUSHOVER_API_TOKEN;
-  const user = process.env.PUSHOVER_USER_KEY;
-  if (!token || !user) return;
+  // PUSHOVER_USER_KEY may be one key or several separated by commas.
+  const userKeys = (process.env.PUSHOVER_USER_KEY ?? "")
+    .split(",")
+    .map((k) => k.trim())
+    .filter(Boolean);
+  if (!token || userKeys.length === 0) return;
 
-  try {
-    const form = new FormData();
-    form.append("token", token);
-    form.append("user", user);
-    form.append("title", opts.title);
-    form.append("message", opts.message);
-    if (opts.photo) {
-      const blob = new Blob([new Uint8Array(opts.photo.content)], {
-        type: opts.photo.contentType || "image/jpeg",
-      });
-      form.append("attachment", blob, opts.photo.filename);
-    }
-    const res = await fetch("https://api.pushover.net/1/messages.json", {
-      method: "POST",
-      body: form,
-    });
-    if (!res.ok) {
-      console.error("Pushover non-OK response:", res.status, await res.text().catch(() => ""));
-    }
-  } catch (err) {
-    console.error("Pushover send failed:", err);
-  }
+  // Send to each recipient independently so one bad key doesn't drop the rest.
+  await Promise.all(
+    userKeys.map(async (user) => {
+      try {
+        const form = new FormData();
+        form.append("token", token);
+        form.append("user", user);
+        form.append("title", opts.title);
+        form.append("message", opts.message);
+        if (opts.photo) {
+          const blob = new Blob([new Uint8Array(opts.photo.content)], {
+            type: opts.photo.contentType || "image/jpeg",
+          });
+          form.append("attachment", blob, opts.photo.filename);
+        }
+        const res = await fetch("https://api.pushover.net/1/messages.json", {
+          method: "POST",
+          body: form,
+        });
+        if (!res.ok) {
+          console.error("Pushover non-OK response:", res.status, await res.text().catch(() => ""));
+        }
+      } catch (err) {
+        console.error("Pushover send failed:", err);
+      }
+    })
+  );
 }
 
 export async function POST(request: Request) {
