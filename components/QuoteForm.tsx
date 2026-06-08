@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import Reveal from "./Reveal";
 
 const MAX_PHOTOS = 5;
@@ -356,7 +357,8 @@ export default function QuoteForm() {
                 </div>
                 <div className="form-foot">
                   <p className="fineprint">
-                    By submitting you agree to be contacted about your quote. We never share your info.
+                    By submitting you agree to be contacted about your quote and to our{" "}
+                    <Link href="/privacy">Privacy Policy</Link>. We never sell your info.
                   </p>
                   <button type="submit" className="btn btn-primary" disabled={submitting}>
                     {submitting ? "Sending…" : "Book now"}

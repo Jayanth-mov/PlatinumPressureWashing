@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -36,6 +37,7 @@ export default function Footer() {
               <a href="#results">Results</a>
               <a href="#reviews">Reviews</a>
               <a href="#quote">Get a quote</a>
+              <Link href="/privacy">Privacy policy</Link>
             </div>
             <div className="footer-col">
               <h4>Contact</h4>
@@ -47,7 +49,11 @@ export default function Footer() {
         </div>
         <div className="footer-bottom">
           <span>&copy; 2026 Platinum Pressure Washing. All rights reserved.</span>
-          <span>Licensed &amp; insured &middot; Frisco, TX</span>
+          <span>
+            <Link href="/privacy">Privacy policy</Link>
+            <span className="sep">&middot;</span>
+            Licensed &amp; insured &middot; Frisco, TX
+          </span>
         </div>
       </div>
     </footer>
